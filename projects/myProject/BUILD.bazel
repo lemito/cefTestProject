@@ -1,0 +1,121 @@
+PRODUCT_NAME = "myProjects"
+PKG_NAME = "//projects/{}".format(PRODUCT_NAME)
+
+package(default_visibility = [
+    ":__subpackages__",
+])
+
+load("@cef//bazel:library_helpers.bzl", "declare_cc_library", "declare_objc_library")
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+#
+# Source file lists.
+#
+
+srcs_common = [
+]
+
+srcs_renderer = [
+    "//projects/minimal:file-app_other_minimal.cc",
+    "app_renderer_impl.cc",
+]
+
+srcs_renderer_mac = [
+    "//projects/minimal:file-process_helper_mac_minimal.cc",
+]
+
+srcs_browser = [
+    "app_browser_impl.cc",
+    "client_impl.cc",
+    "client_impl.h",
+    "//projects/minimal:file-main_minimal.cc",
+]
+
+srcs_browser_linux = [
+]
+
+srcs_browser_mac = [
+]
+
+srcs_browser_win = [
+    "resource.h",
+    "resource_util_win_impl.cc",
+]
+
+srcs_resources = [
+    "resources/message_router.html",
+]
+
+filegroup(
+    name = "Resources",
+    srcs = srcs_resources,
+)
+
+#
+# MacOS targets.
+#
+
+declare_objc_library(
+    name = "BrowserLibMac",
+    srcs = srcs_common + srcs_browser + srcs_browser_mac,
+    target_compatible_with = [
+        "@platforms//os:macos",
+    ],
+    deps = [
+        "@cef//:cef_wrapper",
+        "//projects/shared:BrowserLibMac",
+    ],
+)
+
+declare_objc_library(
+    name = "RendererLibMac",
+    srcs = srcs_common + srcs_renderer + srcs_renderer_mac,
+    target_compatible_with = [
+        "@platforms//os:macos",
+    ],
+    deps = [
+        "@cef//:cef_wrapper",
+        "//projects/shared:RendererLibMac",
+    ],
+)
+
+#
+# Windows targets.
+#
+
+# Headers used by win/resource.rc to be included by the declare_exe target.
+cc_library(
+    name = "ResourceH",
+    hdrs = [
+        "resource.h"
+    ]
+)
+
+filegroup(
+    name = "SrcsWin",
+    srcs = srcs_common + srcs_browser + srcs_browser_win + srcs_renderer,
+    target_compatible_with = [
+        "@platforms//os:windows",
+    ],
+)
+
+#
+# Linux targets.
+#
+
+filegroup(
+    name = "SrcsLinux",
+    srcs = srcs_common + srcs_browser + srcs_browser_linux + srcs_renderer,
+    target_compatible_with = [
+        "@platforms//os:linux",
+    ],
+)
+
+alias(
+    name = PRODUCT_NAME,
+    actual = select({
+        "@platforms//os:linux": "{}/linux:{}".format(PKG_NAME, PRODUCT_NAME),
+        "@platforms//os:macos": "{}/mac:{}".format(PKG_NAME, PRODUCT_NAME),
+        "@platforms//os:windows": "{}/win:{}".format(PKG_NAME, PRODUCT_NAME),
+    }),
+)

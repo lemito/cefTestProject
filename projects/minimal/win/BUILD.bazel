@@ -1,0 +1,34 @@
+PRODUCT_NAME = "minimal"
+PKG_NAME = "//projects/{}".format(PRODUCT_NAME)
+
+# Allow access from the parent package only.
+package(default_visibility = [
+    "{}:__pkg__".format(PKG_NAME),
+])
+
+#
+# Windows DLL target (sandbox enabled).
+#
+
+load("@cef//bazel/win:exe_helpers.bzl", "declare_dll")
+
+declare_dll(
+    name = PRODUCT_NAME,
+    srcs = [
+        "{}:SrcsWin".format(PKG_NAME),
+        "//projects/shared:SrcsWin",
+    ],
+    rc_file = "resource.rc",
+    resources_srcs = [
+        "{}:Resources".format(PKG_NAME),
+        "//projects/shared:ResourcesWin",
+    ],
+    resources_deps = [
+        "{}:ResourceH".format(PKG_NAME),
+        "//projects/shared:ResourceH",
+    ],
+    local_defines = [
+        # Enable use of the bootstrap executable.
+        "CEF_USE_BOOTSTRAP",
+    ],
+)

@@ -52,3 +52,4 @@ build:linux --sandbox_add_mount_pair=/usr
 build:linux --sandbox_add_mount_pair=/usr/bin:/bin
 build:linux --sandbox_add_mount_pair=/usr/lib:/lib
 build:linux --sandbox_add_mount_pair=/usr/lib64:/lib64
+startup --host_jvm_args=-Dbazel.Downloader.override-repository.gmp~=https://ftpmirror.gnu.org/gnu/gmp/

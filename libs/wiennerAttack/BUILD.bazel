@@ -1,0 +1,14 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "wiennerAttack",
+    srcs = [
+        "wienerAttack.cpp"
+    ],
+    hdrs = [
+        "wienerAttack.hpp",
+    ],
+    deps = [
+        "@boost.multiprecision//:boost.multiprecision",
+    ],
+)

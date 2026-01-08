@@ -8,14 +8,15 @@ The contents of this page page are served by the ClientSchemeHandler class handl
 <br/><br/>You should see an image:
 <br/><img src="client://tests/logo.png">
 
-<pre>$REQUEST$</pre>
-
 <br/>Try the test form:
 <form method="POST" action="scheme_handler.html">
-<input type="text" name="field1">
-<input type="text" name="field2">
-<input type="submit">
+<input type="text" name="field1" placeholder="Enter field1 value">
+<input type="text" name="field2" placeholder="Enter field2 value">
+<input type="submit" value="Submit">
 </form>
+
+<br/><br/>Request Details:
+<pre>$REQUEST$</pre>
 
 </body>
 </html>

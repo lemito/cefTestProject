@@ -96,7 +96,37 @@ std::string DumpRequestContents(CefRefPtr<CefRequest> request) {
             size_t size = element->GetBytesCount();
             char* bytes = new char[size];
             element->GetBytes(size, bytes);
-            ss << std::string(bytes, size);
+            std::string postDataStr(bytes, size);
+            ss << postDataStr;
+            
+            // Parse form data
+            ss << "\n\nParsed Form Fields:";
+            std::string::size_type pos = 0;
+            while (pos < postDataStr.length()) {
+              std::string::size_type eq = postDataStr.find('=', pos);
+              std::string::size_type amp = postDataStr.find('&', pos);
+              if (eq != std::string::npos) {
+                std::string key = postDataStr.substr(pos, eq - pos);
+                std::string value;
+                if (amp != std::string::npos) {
+                  value = postDataStr.substr(eq + 1, amp - eq - 1);
+                  pos = amp + 1;
+                } else {
+                  value = postDataStr.substr(eq + 1);
+                  pos = postDataStr.length();
+                }
+                // URL decode (basic)
+                std::string::size_type plusPos = 0;
+                while ((plusPos = value.find('+', plusPos)) != std::string::npos) {
+                  value[plusPos] = ' ';
+                  plusPos++;
+                }
+                ss << "\n\t" << key << " = " << value;
+              } else {
+                break;
+              }
+            }
+            
             delete[] bytes;
           }
         } else if (element->GetType() == PDE_TYPE_FILE) {

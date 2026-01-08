@@ -4,6 +4,20 @@
 
 workspace(name = "cef-project")
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "gmp",
+    build_file = "//bazel:gmp.BUILD",
+    sha256 = "258e6cd51b3fbdfc185c716d55f82c08aff57df0c6fbd143cf6ed561267a1526",
+    strip_prefix = "gmp-6.2.0",
+    urls = [
+        "https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz",
+        "https://mirrors.kernel.org/gnu/gmp/gmp-6.2.0.tar.xz",
+        "https://mirror.koddos.net/gnu/gmp/gmp-6.2.0.tar.xz",
+    ],
+)
+
 #
 # Load the CEF binary distribution.
 #

@@ -28,7 +28,6 @@ class RequestDumpResourceProvider : public CefResourceManager::Provider {
 
     const std::string& url = request->url();
     if (url != url_) {
-      // Not handled by this provider.
       return false;
     }
 
